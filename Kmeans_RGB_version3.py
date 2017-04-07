@@ -88,7 +88,7 @@ def get_likelihood(points, centers):
 	label_lik = likelihood_a - likelihood_b
 	label_lik[label_lik >= 0] = 0
 	label_lik[label_lik < 0] = 1
-	return label_lik
+	return likelihood_a, likelihood_b, label_lik
 
 if __name__=='__main__':
 	start = time.time()
@@ -102,7 +102,7 @@ if __name__=='__main__':
 	print('K-Means Cluster time is: {0:.2f}s'.format(duration))
 	# mplot(centers, labels, temp)
 	start = time.time()
-	label_lik = get_likelihood(temp, centers)
+	likelihood_a, likelihood_b, label_lik = get_likelihood(temp, centers)
 	segmentation(image_d, label_lik.reshape(m,n))
 	# segmentation(image_d, labels)
 	duration = time.time()-start
