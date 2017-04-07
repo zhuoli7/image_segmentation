@@ -10,18 +10,20 @@ import math
 from skimage.measure import block_reduce
 from sklearn.mixture import GaussianMixture
 
-def Km_cluster(image):
+def KM_cluster(image):
 	m, n, z = image.shape
 	temp = image.reshape(m*n, z)
-	result = KMeans(n_clusters = 2)
+	result = KMeans(n_clusters = 2, n_jobs=-1)
 	result.fit(temp)
 	center = result.cluster_centers_
 	labels = result.labels_
-	return center, labels, temp
+	return center, labels.reshape(m,n), temp, m, n
 
-def mplot(labels, temp):	
+def mplot(centers, labels, temp):	
 	x, y, z = [], [], []
 	x1, y1, z1 = [], [], []
+	o,p,q = centers[0]
+	o1,p1,q1 = centers[1]	
 	for i in range(len(temp)):
 		if(labels[i] == 0):
 			x.append(temp[i][0])
@@ -31,30 +33,32 @@ def mplot(labels, temp):
 			x1.append(temp[i][0])
 			y1.append(temp[i][1])
 			z1.append(temp[i][2])
-	ax1.scatter(x,y,z,c='r', marker='o')
-	ax1.scatter(x1,y1,z1, c='g',marker='*')
+	ax1.scatter(x,y,z,c='b', marker='.', zorder = -1)
+	ax1.scatter(x1,y1,z1, c='r',marker='.', zorder = -1)
+	ax1.scatter(o, p, q, c = 'k', marker = 'o', s = 64, zorder = 10)
+	ax1.scatter(o1, p1, q1, c = 'k', marker = 'o', s = 64, zorder = 10)
+	ax1.set_xlabel('R')
+	ax1.set_ylabel('G')
+	ax1.set_zlabel('B')
 	plt.show()
 
 def segementation(image, labels):
-	one_side = np.empty_like(image)
-	another_side = np.empty_like(image)
 	m, n, z = image.shape
-	new = labels.reshape(m, n)
+	one_side = np.zeros_like(image)
+	another_side = np.zeros_like(image)
 	for i in range(m):
 		for j in range(n):
-			if(new[i][j] == 0):
+			if(labels[i][j] == 0):
 				one_side[i][j] = image[i][j]
-				another_side[i][j] = np.array([0,0,0])
 			else:
 				another_side[i][j] = image[i][j]
-				one_side[i][j] = np.array([0,0,0])
-	imsave('one.jpeg', one_side)
-	imsave('two.jpeg', another_side)
+	imsave('one.jpg', one_side)
+	imsave('two.jpg', another_side)
 
 def downsample(image,down_rate):
 	image_d = block_reduce(image, block_size=(down_rate, down_rate, 1), func=np.max)
 	return image_d
-
+	
 def Euclidian_distance(matrix, centers):
 	mat_a = matrix - centers[0]
 	mat_b = matrix - centers[1]
@@ -76,33 +80,32 @@ def GMM(image):
 	means = result_GMM.means_
 	covariances = result_GMM.covariances_
 
-
 if __name__=='__main__':
 	start = time.time()
 	fig = plt.figure()
-	ax1 = fig.add_subplot(111, projection = '3d')
+	ax1 = fig.add_subplot(111, projection='3d')
 	im = 'IMAG0428.jpg'
 	image = imread(im)
-	image_d = downsample(image,1)
-	centers, labels, temp = Km_cluster(image_d)
+	image_d = downsample(image,2)	
+	centers, labels, temp, m, n = KM_cluster(image_d)
 	duration = time.time()-start
-	print('K-Means Cluster time is: {0:.2f}'.format(duration))
-	# mplot(labels, temp)
+	print('K-Means Cluster time is: {0:.2f}s'.format(duration))
+	# mplot(centers, labels, temp)
 	start = time.time()
-	# segementation(image, labels)
+	# segementation(image_d, labels)
 	duration = time.time()-start
-	print('Segmentation time is: {0:.2f}'.format(duration))
+	print('Segmentation time is: {0:.2f}s'.format(duration))
 
+	#########
 	dist_a, dist_b = Euclidian_distance(temp, centers)
 	likelihood_a = regularization(dist_a)
 	likelihood_b = regularization(dist_b)
 
-	# print(likelihood_a)
-	# print(likelihood_b)
+	print('likelihood_a',likelihood_a)
+	print('likelihood_b',likelihood_b)
 
 	# creat label with likelihood fro segmentation
 	label_lik = likelihood_a - likelihood_b
 	label_lik[label_lik >= 0] = 0
 	label_lik[label_lik < 0] = 1
-	segementation(image_d, label_lik)
-
+	segementation(image_d, label_lik.reshape(m,n))
