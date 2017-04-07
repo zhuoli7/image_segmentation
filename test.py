@@ -104,5 +104,5 @@ if __name__=='__main__':
 	label_lik = likelihood_a - likelihood_b
 	label_lik[label_lik >= 0] = 0
 	label_lik[label_lik < 0] = 1
-	segementation(image, label_lik)
+	segementation(image_d, label_lik)
 
