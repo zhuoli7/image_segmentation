@@ -29,8 +29,15 @@ def dfs(capacity_graph):
     return res, stack_min, visited
 
 if __name__ == "__main__":
-    Graph G()
+    import Kmeans_rgb_modified
+    from skimage.io import imread, imsave
+    import numpy as np
+
+    m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction()
+    G = Graph(m, n, likelihood_a, likelihood_b)
     res, stack_min, visisted = dfs(G)
     while res:
         G.update(res, stack_min[-1])
         res, stack_min, visisted = dfs(G)
+    cc = 0
+    

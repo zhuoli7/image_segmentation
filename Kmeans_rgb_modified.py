@@ -84,7 +84,7 @@ def mainfunction():
     start = time.time()
     fig = plt.figure()
     ax1 = fig.add_subplot(111, projection='3d')
-    im = 'IMG_0700.JPG'
+    im = 'cow.JPG'
     image = imread(im)
     image_d = downsample(image,2)	
     centers, labels, temp, m, n = KM_cluster(image_d)
