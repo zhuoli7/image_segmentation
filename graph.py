@@ -63,7 +63,8 @@ class Graph:
         l=len(path)
         for i in range(l):
             if(i + 1 < l):
-                self.edg[path[i]][path[i+1]]=self.edg[path[i]][path[i+1]]-min
+                self.edg[path[i]][path[i + 1]] = self.edg[path[i]][path[i + 1]] - min
+                self.edg[path[i + 1]][path[i]] = self.edg[path[i + 1]][path[i]] + min
 
     def find_edge_value(self,start,end):
         return self.edg[start][end]
