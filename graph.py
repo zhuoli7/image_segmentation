@@ -5,23 +5,26 @@ class Graph:
         self.size = m * n
         self.width = n
         self.length = m
-        self.edg = {0:{}}
+        self.edg = {0:{},-1:{}}
         self.adj = {0:[]}
+        self.res = {-1:{}}
         for i in range(self.size):
             # source to every node
             self.edg[0].setdefault(i+1, la[i])
             # source's adjcent node
             self.adj[0].append(i+1)
+            self.edg[-1].setdefault(i+1, 0)
             
         for i in range(self.size):
             xc = i // self.width
             yc = (i + 1) % self.width
-            self.edg.setdefault(i + 1,{})
+            self.edg.setdefault(i + 1, {})
             # set penalty
             penalty = 0.2
             # current node to sink
-            self.edg[i + 1].setdefault(-1,lb[i])
-            self.adj.setdefault(i + 1,[])
+            self.edg[i + 1].setdefault(0, 0)
+            self.edg[i + 1].setdefault(-1, lb[i])
+            self.adj.setdefault(i + 1, [])
             self.adj[i + 1].append(-1)
             # current node to adjcent node
             if xc != 0:
@@ -57,14 +60,27 @@ class Graph:
         return self.adj[x]
 
     def update(self,path,min):
-        
+        l=len(path)
+        for i in range(l):
+            if(i + 1 < l):
+                self.edg[path[i]][path[i + 1]] = self.edg[path[i]][path[i + 1]] - min
+                self.edg[path[i + 1]][path[i]] = self.edg[path[i + 1]][path[i]] + min
 
-
+    def find_edge_value(self,start,end):
+        return self.edg[start][end]
 
 
 if __name__=='__main__':
     m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction()
     g=Graph(m, n, likelihood_a, likelihood_b)
-    print(g.find_adjcent(5))
+    #print(g.find_adjcent(5))
+    #print(g.find_edge_value(0,5))
+    #print(g.find_edge_value(5,165))
+    #print(g.find_edge_value(165,-1))
+    #g.update([0,5,165,-1],0.2)
+    #print(g.find_edge_value(0,5))
+    #print(g.find_edge_value(5,165))
+    #print(g.find_edge_value(165,-1))
+
 
  
