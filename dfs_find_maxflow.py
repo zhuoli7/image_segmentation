@@ -28,8 +28,8 @@ def dfs(capacity_graph):
                 visited[i] = 1
     return res, stack_min, visited
 
-if __name__ == "main":
-    graph G()
+if __name__ == "__main__":
+    Graph G()
     res, stack_min, visisted = dfs(G)
     while res:
         G.update(res, stack_min[-1])
