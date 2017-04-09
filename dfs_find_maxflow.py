@@ -33,7 +33,8 @@ def dfs(capacity_graph):
 
 if __name__ == "__main__":
     m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction()
-    g = Graph(m, n, likelihood_a, likelihood_b)
+    g = Graph(m, n, likelihood_a, likelihood_b, 0.2)
+    tmp = g.find_adjcent(4096)
     res, stack_min, visisted = dfs(g)
     while res:
         g.update(res, stack_min[-1])

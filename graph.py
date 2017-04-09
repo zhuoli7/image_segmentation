@@ -1,16 +1,16 @@
 import Kmeans_rgb_modified
 
 class Graph:
-    def __init__(self,m,n,la,lb):
+    def __init__(self, m, n, la, lb, penalty):
         self.size = m * n
         self.width = n
         self.length = m
-        self.edg = {0:{},-1:{}}
-        self.adj = {0:[],-1:[]}
+        self.edg = {0:{}, -1:{}}
+        self.adj = {0:[], -1:[]}
         self.res = {-1:{}}
         for i in range(self.size):
             # source to every node
-            self.edg[0].setdefault(i+1, la[i])
+            self.edg[0][i+1] = la[i]
             # source's adjcent node
             self.adj[0].append(i+1)
             self.edg[-1].setdefault(i+1, 0)
@@ -19,12 +19,10 @@ class Graph:
             xc = i // self.width
             yc = (i + 1) % self.width
             self.edg.setdefault(i + 1, {})
-            # set penalty
-            penalty = 0.2
             # current node to sink
             self.edg[i + 1].setdefault(0, 0)
             self.edg[i + 1].setdefault(-1, lb[i])
-            self.adj.setdefault(i + 1, [])
+            self.adj.setdefault(i + 1, [-1])
             # current node to adjcent node
             if xc != 0:
                 if yc == 0:
@@ -60,14 +58,13 @@ class Graph:
 
     def update(self,path,min):
         l=len(path)
-        for i in range(l):
-            if(i + 1 < l):
-                self.edg[path[i]][path[i + 1]] = self.edg[path[i]][path[i + 1]] - min
-                self.edg[path[i + 1]][path[i]] = self.edg[path[i + 1]][path[i]] + min
-                if self.edg[path[i + 1]][path[i]] > 0 and path[i] not in self.adj[path[i + 1]]:
-                    self.adj[path[i + 1]].append(path[i])
-                if self.edg[path[i]][path[i + 1]] == 0 and path[i + 1] in self.adj[path[i]]:
-                    self.adj[path[i]].pop(i + 1)
+        for i in range(l-1):
+            self.edg[path[i]][path[i + 1]] -= min
+            self.edg[path[i + 1]][path[i]] += min
+            if self.edg[path[i + 1]][path[i]] > 0 and path[i] not in self.adj[path[i + 1]]:
+                self.adj[path[i + 1]].append(path[i])
+            if self.edg[path[i]][path[i + 1]] == 0 and path[i + 1] in self.adj[path[i]]:
+                self.adj[path[i]].pop(i + 1)
 
     def find_edge_value(self,start,end):
         return self.edg[start][end]
