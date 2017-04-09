@@ -6,13 +6,14 @@ class Graph:
         self.width = n
         self.length = m
         self.edg = {0:{},-1:{}}
-        self.adj = {0:[]}
+        self.adj = {0:[],-1:[]}
         self.res = {-1:{}}
         for i in range(self.size):
             # source to every node
             self.edg[0].setdefault(i+1, la[i])
             # source's adjcent node
             self.adj[0].append(i+1)
+            self.adj[-1].append(i+1)
             self.edg[-1].setdefault(i+1, 0)
             
         for i in range(self.size):
@@ -73,7 +74,7 @@ class Graph:
 if __name__=='__main__':
     m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction()
     g=Graph(m, n, likelihood_a, likelihood_b)
-    #print(g.find_adjcent(5))
+    print(g.find_adjcent(-1))
     #print(g.find_edge_value(0,5))
     #print(g.find_edge_value(5,165))
     #print(g.find_edge_value(165,-1))
