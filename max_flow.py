@@ -3,7 +3,7 @@
 """
 Created on Sat Apr  8 13:34:00 2017
 
-@author: Changlong Jiang / Yuxuan Mao / Brother Bean / Hanyang 88
+@author: Changlong Jiang / Yuxuan Mao / Zhuoli Peng / Hanjie Zhang
 """
 from queue import Queue
 import numpy as np
