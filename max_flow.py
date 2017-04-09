@@ -124,12 +124,13 @@ def mainfunction():
     # print('likelihood_a',likelihood_a)
     # print('likelihood_b',likelihood_b)
     
-    # creat label with likelihood fro segmentation
-    label_lik = likelihood_a - likelihood_b
-    label_lik[label_lik >= 0] = 0
-    label_lik[label_lik < 0] = 1
-    segementation(image_d, label_lik.reshape(m,n))
-    return m, n, likelihood_a, likelihood_b
+    ## creat label with likelihood fro segmentation
+    ## only for test, not needed for the final segmentation
+    #label_lik = likelihood_a - likelihood_b
+    #label_lik[label_lik >= 0] = 0
+    #label_lik[label_lik < 0] = 1
+    #segementation(image_d, label_lik.reshape(m,n))
+    return image_d, m, n, likelihood_a, likelihood_b
 
 class Graph:
     def __init__(self,m,n,la,lb):
@@ -278,7 +279,7 @@ def bfs(G,source,sink):
 
 
 if __name__=='__main__':
-    m, n, likelihood_a, likelihood_b = mainfunction()
+    image_d, m, n, likelihood_a, likelihood_b = mainfunction()
     g=Graph(m, n, likelihood_a, likelihood_b)
     #print(g.find_adjcent(-1))
     #print(g.find_edge_value(1,-1))
@@ -295,8 +296,7 @@ if __name__=='__main__':
         labels[(i//n)][(i%n)-1]=0
     for i in background_list:
         labels[(i//n)][(i%n)-1]=1
-    im = 'WechatIMG128.jpeg'
-    image = imread(im)
-    segementation_nf(image, labels)
+
+    segementation_nf(image_d, labels)
     print(max_flow_final)
 
