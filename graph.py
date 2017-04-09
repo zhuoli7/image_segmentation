@@ -58,13 +58,14 @@ class Graph:
 
     def update(self,path,min):
         l=len(path)
-        for i in range(l-1):
-            self.edg[path[i]][path[i + 1]] -= min
-            self.edg[path[i + 1]][path[i]] += min
-            if self.edg[path[i + 1]][path[i]] > 0 and path[i] not in self.adj[path[i + 1]]:
-                self.adj[path[i + 1]].append(path[i])
-            if self.edg[path[i]][path[i + 1]] == 0 and path[i + 1] in self.adj[path[i]]:
-                self.adj[path[i]].pop(i + 1)
+        for i in range(l):
+            if(i + 1 < l):
+                self.edg[path[i]][path[i + 1]] = self.edg[path[i]][path[i + 1]] - min
+                self.edg[path[i + 1]][path[i]] = self.edg[path[i + 1]][path[i]] + min
+                if self.edg[path[i + 1]][path[i]] > 0 and path[i] not in self.adj[path[i + 1]]:
+                    self.adj[path[i + 1]].append(path[i])
+                if self.edg[path[i]][path[i + 1]] == 0 and path[i + 1] in self.adj[path[i]]:
+                    self.adj[path[i]].remove(path[i + 1])
 
     def find_edge_value(self,start,end):
         return self.edg[start][end]
@@ -73,15 +74,15 @@ class Graph:
 if __name__=='__main__':
     m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction()
     g=Graph(m, n, likelihood_a, likelihood_b)
-    #print(g.find_adjcent(5))
+    print(g.find_adjcent(5))
     #print(g.find_edge_value(0,5))
     #print(g.find_edge_value(5,165))
     #print(g.find_edge_value(165,-1))
-    #g.update([0,5,165,-1],0.2)
+    g.update([0,5,165,-1],0.2)
     #print(g.find_edge_value(0,5))
     #print(g.find_edge_value(5,165))
     #print(g.find_edge_value(165,-1))
-    #print(g.find_adjcent(5))
+    print(g.find_adjcent(5))
 
 
  
