@@ -1,4 +1,6 @@
 from graph import *
+import Kmeans_rgb_modified
+
 
 def dfs(capacity_graph):
     stack = []
@@ -9,7 +11,8 @@ def dfs(capacity_graph):
     while stack:
         cur = stack.pop()
         if res:
-            tmp_min = min(capacity_graph.find_edge_value(cur, res[-1]), capacity_graph.find_edge_value(res[-1], cur))
+            #tmp_min = min(capacity_graph.find_edge_value(cur, res[-1]), capacity_graph.find_edge_value(res[-1], cur))
+            tmp_min = capacity_graph.find_edge_value(res[-1], cur)
             if not stack_min or tmp_min < stack_min[-1]:
                 stack_min.append(tmp_min)
             else:
@@ -29,15 +32,10 @@ def dfs(capacity_graph):
     return res, stack_min, visited
 
 if __name__ == "__main__":
-    import Kmeans_rgb_modified
-    from skimage.io import imread, imsave
-    import numpy as np
-
     m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction()
-    G = Graph(m, n, likelihood_a, likelihood_b)
-    res, stack_min, visisted = dfs(G)
+    g = Graph(m, n, likelihood_a, likelihood_b)
+    res, stack_min, visisted = dfs(g)
     while res:
-        G.update(res, stack_min[-1])
-        res, stack_min, visisted = dfs(G)
+        g.update(res, stack_min[-1])
+        res, stack_min, visisted = dfs(g)
     cc = 0
-    
