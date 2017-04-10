@@ -14,7 +14,7 @@ class Graph:
             # source's adjcent node
             self.adj[0].append(i+1)
             self.edg[-1].setdefault(i+1, 0)
-            
+
         for i in range(self.size):
             xc = i // self.width
             yc = (i + 1) % self.width
@@ -57,15 +57,18 @@ class Graph:
         return self.adj[x]
 
     def update(self,path,min):
-        l=len(path)
-        for i in range(l):
-            if(i + 1 < l):
-                self.edg[path[i]][path[i + 1]] = self.edg[path[i]][path[i + 1]] - min
-                self.edg[path[i + 1]][path[i]] = self.edg[path[i + 1]][path[i]] + min
-                if self.edg[path[i + 1]][path[i]] > 0 and path[i] not in self.adj[path[i + 1]]:
-                    self.adj[path[i + 1]].append(path[i])
-                if self.edg[path[i]][path[i + 1]] == 0 and path[i + 1] in self.adj[path[i]]:
-                    self.adj[path[i]].remove(path[i + 1])
+        try:
+            l=len(path)
+            for i in range(l):
+                if(i + 1 < l):
+                    self.edg[path[i]][path[i + 1]] = self.edg[path[i]][path[i + 1]] - min
+                    self.edg[path[i + 1]][path[i]] = self.edg[path[i + 1]][path[i]] + min
+                    if self.edg[path[i + 1]][path[i]] > 0 and path[i] not in self.adj[path[i + 1]]:
+                        self.adj[path[i + 1]].append(path[i])
+                    if self.edg[path[i]][path[i + 1]] <= 0 and path[i + 1] in self.adj[path[i]]:
+                        self.adj[path[i]].remove(path[i + 1])
+        except KeyError:
+            cc = 0
 
     def find_edge_value(self,start,end):
         return self.edg[start][end]

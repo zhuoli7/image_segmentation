@@ -80,13 +80,12 @@ def GMM(image):
     means = result_GMM.means_
     covariances = result_GMM.covariances_
 
-def mainfunction():
+def mainfunction(img_name):
     start = time.time()
     fig = plt.figure()
     ax1 = fig.add_subplot(111, projection='3d')
-    im = 'cow.jpg'
-    image = imread(im)
-    image_d = downsample(image,2)	
+    image = imread(img_name)
+    image_d = downsample(image, 4)
     centers, labels, temp, m, n = KM_cluster(image_d)
     duration = time.time()-start
     # print('K-Means Cluster time is: {0:.2f}s'.format(duration))
@@ -103,10 +102,10 @@ def mainfunction():
 
     # print('likelihood_a',likelihood_a)
     # print('likelihood_b',likelihood_b)
-    
+
     # creat label with likelihood fro segmentation
     label_lik = likelihood_a - likelihood_b
     label_lik[label_lik >= 0] = 0
     label_lik[label_lik < 0] = 1
     segementation(image_d, label_lik.reshape(m,n))
-    return m, n, likelihood_a, likelihood_b
+    return image_d, m, n, likelihood_a, likelihood_b
