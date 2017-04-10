@@ -293,9 +293,9 @@ if __name__=='__main__':
     max_flow_final,foreground_list, background_list= f_f(g, 0, -1)
     labels=np.ones((m,n))
     for i in foreground_list:
-        labels[(i//n)][(i%n)-1]=0
+        labels[((i-1)//n)][((i-1)%n)]=0
     for i in background_list:
-        labels[(i//n)][(i%n)-1]=1
+        labels[((i-1)//n)][((i-1)%n)]=1
 
     segementation_nf(image_d, labels)
     print(max_flow_final)
