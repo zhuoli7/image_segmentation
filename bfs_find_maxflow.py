@@ -155,8 +155,8 @@ def find_valid_path(G,source,sink):
 
 
 if __name__=='__main__':
-    image_d, m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction()
-    g=Graph(m, n, likelihood_a, likelihood_b)
+    image_d, m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction("cow.jpg")
+    g=Graph(m, n, likelihood_a, likelihood_b, 0.1)
     #print(g.find_adjcent(-1))
     #print(g.find_edge_value(1,-1))
     #print(g.find_edge_value(5,165))
