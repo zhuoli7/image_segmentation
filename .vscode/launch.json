@@ -8,6 +8,8 @@
             "stopOnEntry": true,
             "pythonPath": "${config.python.pythonPath}",
             "program": "${file}",
+<<<<<<< HEAD
+=======
             "cwd": "${workspaceRoot}",
             "debugOptions": [
                 "WaitOnAbnormalExit",
@@ -45,6 +47,7 @@
             "pythonPath": "${config.python.pythonPath}",
             "module": "module.name",
             "cwd": "${workspaceRoot}",
+>>>>>>> master
             "debugOptions": [
                 "WaitOnAbnormalExit",
                 "WaitOnNormalExit",
@@ -58,7 +61,10 @@
             "stopOnEntry": true,
             "pythonPath": "${config.python.pythonPath}",
             "program": "${file}",
+<<<<<<< HEAD
+=======
             "cwd": "null",
+>>>>>>> master
             "console": "integratedTerminal",
             "debugOptions": [
                 "WaitOnAbnormalExit",
@@ -72,7 +78,10 @@
             "stopOnEntry": true,
             "pythonPath": "${config.python.pythonPath}",
             "program": "${file}",
+<<<<<<< HEAD
+=======
             "cwd": "null",
+>>>>>>> master
             "console": "externalTerminal",
             "debugOptions": [
                 "WaitOnAbnormalExit",
@@ -86,7 +95,10 @@
             "stopOnEntry": true,
             "pythonPath": "${config.python.pythonPath}",
             "program": "${workspaceRoot}/manage.py",
+<<<<<<< HEAD
+=======
             "cwd": "${workspaceRoot}",
+>>>>>>> master
             "args": [
                 "runserver",
                 "--noreload"
@@ -102,6 +114,11 @@
             "name": "Flask",
             "type": "python",
             "request": "launch",
+<<<<<<< HEAD
+            "stopOnEntry": true,
+            "pythonPath": "${config.python.pythonPath}",
+            "program": "${workspaceRoot}/run.py",
+=======
             "stopOnEntry": false,
             "pythonPath": "${config.python.pythonPath}",
             "program": "fully qualified path fo 'flask' executable. Generally located along with python interpreter",
@@ -128,6 +145,7 @@
             "pythonPath": "${config.python.pythonPath}",
             "program": "${workspaceRoot}/run.py",
             "cwd": "${workspaceRoot}",
+>>>>>>> master
             "args": [],
             "debugOptions": [
                 "WaitOnAbnormalExit",
@@ -142,7 +160,10 @@
             "stopOnEntry": true,
             "pythonPath": "${config.python.pythonPath}",
             "program": "${workspaceRoot}/console.py",
+<<<<<<< HEAD
+=======
             "cwd": "${workspaceRoot}",
+>>>>>>> master
             "args": [
                 "dev",
                 "runserver",
