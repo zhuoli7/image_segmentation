@@ -1,5 +1,12 @@
-from skimage.io import imread, imsave
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Apr  8 13:34:00 2017
+@author: Changlong Jiang / Yuxuan Mao / Zhuoli Peng / Hanjie Zhang
+"""
+from queue import Queue
 import numpy as np
+from skimage.io import imread, imsave
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
 from matplotlib import style
@@ -9,7 +16,6 @@ import time
 import math
 from skimage.measure import block_reduce
 from sklearn.mixture import GaussianMixture
-
 def KM_cluster(image):
     m, n, z = image.shape
     temp = image.reshape(m*n, z)
@@ -55,6 +61,19 @@ def segementation(image, labels):
     imsave('one.jpg', one_side)
     imsave('two.jpg', another_side)
 
+def segementation_nf(image, labels):
+    m, n, z = image.shape
+    one_side = np.zeros_like(image)
+    another_side = np.zeros_like(image)
+    for i in range(m):
+        for j in range(n):
+            if(labels[i][j] == 0):
+                one_side[i][j] = image[i][j]
+            else:
+                another_side[i][j] = image[i][j]
+    imsave('one_nf.jpg', one_side)
+    imsave('two_nf.jpg', another_side)
+
 def downsample(image,down_rate):
     image_d = block_reduce(image, block_size=(down_rate, down_rate, 1), func=np.max)
     return image_d
@@ -84,9 +103,9 @@ def mainfunction():
     start = time.time()
     fig = plt.figure()
     ax1 = fig.add_subplot(111, projection='3d')
-    im = 'cow.jpg'
+    im = 'WechatIMG128.jpeg'
     image = imread(im)
-    image_d = downsample(image,2)	
+    image_d = downsample(image,4)	
     centers, labels, temp, m, n = KM_cluster(image_d)
     duration = time.time()-start
     # print('K-Means Cluster time is: {0:.2f}s'.format(duration))
@@ -104,9 +123,10 @@ def mainfunction():
     # print('likelihood_a',likelihood_a)
     # print('likelihood_b',likelihood_b)
     
-    # creat label with likelihood fro segmentation
-    label_lik = likelihood_a - likelihood_b
-    label_lik[label_lik >= 0] = 0
-    label_lik[label_lik < 0] = 1
-    segementation(image_d, label_lik.reshape(m,n))
-    return m, n, likelihood_a, likelihood_b
+    ## creat label with likelihood fro segmentation
+    ## only for test, not needed for the final segmentation
+    #label_lik = likelihood_a - likelihood_b
+    #label_lik[label_lik >= 0] = 0
+    #label_lik[label_lik < 0] = 1
+    #segementation(image_d, label_lik.reshape(m,n))
+    return image_d, m, n, likelihood_a, likelihood_b
