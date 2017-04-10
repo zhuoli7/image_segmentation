@@ -1,7 +1,7 @@
 import Kmeans_rgb_modified
 
 class Graph:
-    def __init__(self,m,n,la,lb):
+    def __init__(self,m,n,la,lb，penalty):
         self.size = m * n
         self.width = n
         self.length = m
@@ -20,7 +20,7 @@ class Graph:
             yc = (i + 1) % self.width
             self.edg.setdefault(i + 1, {})
             # set penalty
-            penalty = 0.2
+            self.penalty = penalty
             # current node to sink
             self.edg[i + 1].setdefault(0, 0)
             self.edg[i + 1].setdefault(-1, lb[i])
@@ -32,7 +32,7 @@ class Graph:
                 else:
                     yct = yc
                 top = (xc - 1) * self.width + yct
-                self.edg[i + 1].setdefault(top, penalty)
+                self.edg[i + 1].setdefault(top, self.penalty)
                 self.adj[i + 1].append(top)
             if yc != 1:
                 if yc == 0:
@@ -40,11 +40,11 @@ class Graph:
                 else:
                     yct = yc
                 left = xc * self.width + yct - 1
-                self.edg[i + 1].setdefault(left, penalty)
+                self.edg[i + 1].setdefault(left, self.penalty)
                 self.adj[i + 1].append(left)
             if yc != 0:
                 right = xc * self.width + yc + 1
-                self.edg[i + 1].setdefault(right, penalty)
+                self.edg[i + 1].setdefault(right, self.penalty)
                 self.adj[i + 1].append(right)
             if xc != self.length - 1:
                 if yc == 0:
@@ -52,7 +52,7 @@ class Graph:
                 else:
                 	xct = xc
                 bot = (xct + 1) * self.width + yc
-                self.edg[i + 1].setdefault(bot, penalty)
+                self.edg[i + 1].setdefault(bot, self.penalty)
                 self.adj[i + 1].append(bot)
 
     def find_adjcent(self,x):
@@ -75,7 +75,7 @@ class Graph:
 
 if __name__=='__main__':
     m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction()
-    g=Graph(m, n, likelihood_a, likelihood_b)
+    g=Graph(m, n, likelihood_a, likelihood_b, 0.05)
     print(g.find_adjcent(5))
     #print(g.find_edge_value(0,5))
     #print(g.find_edge_value(5,165))
