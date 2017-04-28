@@ -93,10 +93,10 @@ sample_rate_input.insert('4')
 sample_rate_input.pack(side = "left", padx=10)
 
 penalty_input = input_item('penalty', panel_part)
-sample_rate_input.insert('0.02')
+penalty_input.insert('0.02')
 penalty_input.pack(side = "left", padx=10)
 
-start_button = Button(panel_part, text="start process", command = update_result)
+start_button = Button(panel_part, text="start processing", command = update_result)
 start_button.pack(side = "right", padx=10)
 
 mainloop()
