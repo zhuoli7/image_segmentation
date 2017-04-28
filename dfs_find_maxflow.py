@@ -33,13 +33,13 @@ def dfs(capacity_graph):
     return res, stack_min, visited
 
 if __name__ == "__main__":
-    image, m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction("cow.jpg")
-    #m = 4
-    #n = 4
+    #image, m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction("cow.jpg")
+    m = 2
+    n = 2
     #likelihood_a = [0.1, 0.1, 0.1, 0.1, 0.1, 1, 1, 0.1, 0.1, 1, 1, 0.1, 0.1, 0.1, 0.1, 0.1]
     #likelihood_b = [1, 1, 1, 1, 1, 0.1, 0.1, 1, 1, 0.1, 0.1, 1, 1, 1, 1, 1]
-    #likelihood_a = [0.1, 0.1, 1, 1]
-    #likelihood_b = [1, 1, 0.1, 0.1]
+    likelihood_a = [0.1, 0.1, 1, 1]
+    likelihood_b = [1, 1, 0.1, 0.1]
     g = Graph(m, n, likelihood_a, likelihood_b, 0.2)
     res, stack_min, visited = dfs(g)
     total_flow = 0
@@ -48,9 +48,12 @@ if __name__ == "__main__":
         print(total_flow)
         g.update(res, stack_min[-1])
         res, stack_min, visited = dfs(g)
+    cc = 0
+'''
     one_side = np.zeros_like(image)
     for i in range(m):
         for j in range(n):
             if (i * n + j + 1) in visited:
                 one_side[i][j] = image[i][j]
     imsave('foreground.jpg', one_side)
+'''

@@ -1,5 +1,3 @@
-import Kmeans_rgb_modified
-
 class Graph:
     def __init__(self, m, n, la, lb, penalty):
         self.size = m * n
@@ -76,6 +74,7 @@ class Graph:
 
 
 if __name__=='__main__':
+    import Kmeans_rgb_modified
     m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction()
     g=Graph(m, n, likelihood_a, likelihood_b, 0.05)
     print(g.find_adjcent(5))
