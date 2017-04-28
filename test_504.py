@@ -7,6 +7,8 @@ Created on Sat Apr  8 13:34:00 2017
 import numpy as np
 import Kmeans_rgb_modified
 import bisect
+import time
+
 class Graph:
     def __init__(self,m,n,la,lb,penalty):
         self.size = m * n
@@ -66,54 +68,32 @@ class Graph:
                 self.adj[j].append(bot)
     
     def push(self, start):
-        #print("In push function *** current height",self.height[start],"source height", self.height[0])
-
         if (self.height[start]>2*self.size-1):
                 return False
         pushable = False
         v_has_excess = []
-        #print("v_has_excess_list:",v_has_excess)
         for i in self.adj[start]:
-            #print("verdex:",start,i)
-            #print("condition1:",self.capacity[start][i],self.flow[start][i])
-            #print("condition2:",self.height[start],self.height[i])
             if(self.capacity[start][i]-self.flow[start][i]>0 and self.height[start]>self.height[i]):
                 # if there is a pushable edge, set the flag to True
-                #print("inininin!!")
                 pushable = True
                 data_flow = min(self.excess[start], self.capacity[start][i]- self.flow[start][i])
-                #print("data_flow",data_flow)
-                #print("befor +, flow[start][i]",start,i,self.flow[start][i])
                 self.flow[start][i] += data_flow
-                #print("after +, flow[start][i]",start,i,self.flow[start][i])
                 self.flow[i][start] = -self.flow[start][i]
-                #print("before excess[",i,"]",self.excess[i])
                 self.excess[start] -= data_flow
-                if(self.excess[i] == 0 and i != -1 and  i!=0):
+                if(self.excess[i]==0 and i!=-1 and i!=0):
                     v_has_excess.append([self.height[i], i, self.excess[i]])
                 if(i!=0):
                     self.excess[i] += data_flow
-                #print("after excess[",i,"]",self.excess[i])
-        # if no flow is pushed, relabel and push again
-        #print("after push ",start)
-        #print("capacity:",g.capacity)
-        #print("flow:",g.flow)
-        #print("adj:", g.adj)
-        #print("excess:", g.excess)
-        #print("height:", g.height)
+        # if no flow is pushed, relabel
         if(not pushable):
             self.relabel(start)
-
-            # if start point still has excess, return it as well
-            #print(self.excess[start])
+        # if start point still has excess, return it as well
         if(self.excess[start]>0):
             v_has_excess.append([self.height[start], start, self.excess[start]])
-        #print('v_has_excess',v_has_excess)
         return v_has_excess
 
     def relabel(self, start):
         self.height[start]+=1
-        #print("height[",start,"]", self.height[start])
 
     def find_adjcent(self,x):
         return self.adj[x]
@@ -128,54 +108,39 @@ class Graph:
             if self.capacity[i][-1] > self.flow[i][-1]:
                 background.append(i)
         return foreground,background
-            
 
 
 if __name__=='__main__':
-    #image_d, m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction()
-
-    m=2
-    n=2
-    likelihood_a=[0.1,0.2,0.7,0.9]
-    likelihood_b=[0.9,0.8,0.3,0.1]
-    
+    start = time.time()
+    image_d, m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction()
+    duration = time.time()-start
+    print('Likelihood calculation done in: {0:.2f}s '.format(duration))
     g=Graph(m, n, likelihood_a, likelihood_b, 0.1)
-    """
-    print("original capacity:",g.capacity)
-    print("original flow:",g.flow)
-    print("original adj:", g.adj)
-    print("original excess:", g.excess)
-    print("original height:", g.height)
-    """
     node_has_excess = []
-    # push to heap
+    # push to a list
+    start - time.time()
     for i in range(1, len(g.excess)-1):
         node_has_excess.append([g.height[i], i, g.excess[i]])
-    #print('origin node_has_excess_list',node_has_excess)
     # randomly pick a vertex
     while(node_has_excess):
-        #print("node_has_excess:",node_has_excess)
         cur = node_has_excess.pop(-1)
-        
         nodes = g.push(cur[1])
 		# push nodes with excess to heap
-		# print('node:', nodes)
         if(nodes):
-            for n in nodes:
+            for i in nodes:
 				# keep the list in sort by height
-				# print('before',heap)
-                bisect.insort(node_has_excess, n)
-				# print('after',heap)
+                bisect.insort(node_has_excess, i)
     foreground_list,background_list=g.min_cut()
-    print(foreground_list,background_list)
-    """
-    labels=np.ones((m,n))
+    # set labels based on foreground
+    duration = time.time()-start
+    print('push-relabel done in: {0:.2f}s'.format(duration))
+    start = time.time()
+    labels = np.ones((m,n))
     for i in foreground_list:
         labels[((i-1)//n)][(i-1)%n]=0
     for i in background_list:
         labels[((i-1)//n)][(i-1)%n]=1
-
     Kmeans_rgb_modified.segementation_nf(image_d, labels)
-    
-    """
+    duration = time.time()-start
+    print('segmentation done in: {0:.2f}'.format(duration))
     
