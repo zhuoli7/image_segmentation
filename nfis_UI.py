@@ -63,11 +63,8 @@ window = Tk()
 window.title('nfis')
 path = "example.jpg"
 img = Image.open(path)
-crosshair_img = Image.open('star.jpg')
 resize_factor = img.height / 300 if (img.height / 300) > (img.width / 400) else img.width / 400
 img = ImageTk.PhotoImage(img.resize((int(img.width/resize_factor), int(img.height/resize_factor))))
-crosshair_img = ImageTk.PhotoImage(crosshair_img.resize((5, 5)))
-#img = ImageTk.PhotoImage(img)
 image_part = Frame(window)
 panel_part = LabelFrame(window, text="panel", width = 800, height = 70)
 panel_part.pack_propagate(0)
