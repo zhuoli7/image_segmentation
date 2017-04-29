@@ -68,32 +68,38 @@ class Graph:
                 self.adj[j].append(bot)
     
     def push(self, start):
-        if (self.height[start]>2*self.size-1):
-                return False
+        if (self.height[start]>2*self.size-1 or self.excess[start]==0):
+            return False
         pushable = False
         v_has_excess = []
+        height_diff = float('inf')
         for i in self.adj[start]:
-            if(self.capacity[start][i]-self.flow[start][i]>0 and self.height[start]>self.height[i]):
+            validpath = self.capacity[start][i]-self.flow[start][i]
+            if(validpath>0 and self.height[start]>self.height[i]):
                 # if there is a pushable edge, set the flag to True
                 pushable = True
-                data_flow = min(self.excess[start], self.capacity[start][i]- self.flow[start][i])
+                data_flow = min(self.excess[start], self.capacity[start][i]-self.flow[start][i])
                 self.flow[start][i] += data_flow
                 self.flow[i][start] = -self.flow[start][i]
                 self.excess[start] -= data_flow
                 if(self.excess[i]==0 and i!=-1 and i!=0):
-                    v_has_excess.append([self.height[i], i, self.excess[i]])
-                if(i!=0):
+                    v_has_excess.append([self.height[i], i])
+                if(i!=0 and i!=-1):
                     self.excess[i] += data_flow
-        # if no flow is pushed, relabel
+                if(self.excess[start]==0):
+                    return v_has_excess
+            elif(validpath>0 and (self.height[start]<=self.height[i])):
+                height_diff = min(height_diff, self.height[i]-self.height[start]+1)
+        # if no flow is pushed, and there exists a path but the hight is not enough
+        # raise the height directly to that value plus one, else just raise one
         if(not pushable):
-            self.relabel(start)
-        # if start point still has excess, return it as well
+            self.relabel(start, height_diff)
         if(self.excess[start]>0):
-            v_has_excess.append([self.height[start], start, self.excess[start]])
+            v_has_excess.append([self.height[start], start])
         return v_has_excess
 
-    def relabel(self, start):
-        self.height[start]+=1
+    def relabel(self, start, value=1):
+        self.height[start]+=value
 
     def find_adjcent(self,x):
         return self.adj[x]
@@ -120,12 +126,12 @@ if __name__=='__main__':
     # push to a list
     start - time.time()
     for i in range(1, len(g.excess)-1):
-        node_has_excess.append([g.height[i], i, g.excess[i]])
+        node_has_excess.append([g.height[i], i])
     # randomly pick a vertex
     while(node_has_excess):
         cur = node_has_excess.pop(-1)
         nodes = g.push(cur[1])
-		# push nodes with excess to heap
+		# push nodes with excess to a list
         if(nodes):
             for i in nodes:
 				# keep the list in sort by height
@@ -138,9 +144,9 @@ if __name__=='__main__':
     labels = np.ones((m,n))
     for i in foreground_list:
         labels[((i-1)//n)][(i-1)%n]=0
-    for i in background_list:
-        labels[((i-1)//n)][(i-1)%n]=1
+    # for i in background_list:
+    #     labels[((i-1)//n)][(i-1)%n]=1
     Kmeans_rgb_modified.segementation_nf(image_d, labels)
     duration = time.time()-start
-    print('segmentation done in: {0:.2f}'.format(duration))
+    print('segmentation done in: {0:.2f}s'.format(duration))
     

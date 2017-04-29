@@ -95,7 +95,7 @@ def regularization(matrix):
 def GMM(image):
     m, n, z = image.shape	
     temp = image.reshape(m*n, z)
-    result_GMM = GaussianMixture(n_components = 2).fit(image)
+    result_GMM = GaussianMixture(n_components = 4).fit(image)
     means = result_GMM.means_
     covariances = result_GMM.covariances_
 
@@ -105,24 +105,18 @@ def mainfunction():
     ax1 = fig.add_subplot(111, projection='3d')
     im = 'cow.jpg'
     image = imread(im)
-    image_d = downsample(image,4)	
+    image_d = downsample(image,2)	
     centers, labels, temp, m, n = KM_cluster(image_d)
-    duration = time.time()-start
+    # duration = time.time()-start
     # print('K-Means Cluster time is: {0:.2f}s'.format(duration))
     # mplot(centers, labels, temp)
-    start = time.time()
+    # start = time.time()
     # segementation(image_d, labels)
-    duration = time.time()-start
+    # duration = time.time()-start
     # print('Segmentation time is: {0:.2f}s'.format(duration))
-
-    #########
     dist_a, dist_b = Euclidian_distance(temp, centers)
     likelihood_a = regularization(dist_a)
     likelihood_b = regularization(dist_b)
-
-    # print('likelihood_a',likelihood_a)
-    # print('likelihood_b',likelihood_b)
-    
     ## creat label with likelihood fro segmentation
     ## only for test, not needed for the final segmentation
     #label_lik = likelihood_a - likelihood_b
