@@ -34,11 +34,15 @@ def update_result():# this is the handler of the start processing button
     global penalty_input
     global img2
     global clicked_list
+    global path #the name of the input image
 
-    path2 = output_image_name.get_text()   # change this line to the name of output image
+    path2 = output_image_name.get_text()
     sample_rate = float(sample_rate_input.get_text())#sampling rate
     penalty = float(penalty_input.get_text())   #penalty set
     #the default value is 4 for sample_rate, 0.02 for penalty.
+
+
+    #the name of the input image is stored in path, use it.
     #----------------put your code here------------------#
 
 
@@ -52,7 +56,8 @@ def open_file():
     global img
     global resize_factor
     global clicked_list
-    
+    global path
+
     clicked_list = []
     path = input_image_name.get_text()
     img = Image.open(path)
@@ -61,9 +66,6 @@ def open_file():
     origin_image_label.create_image(0, 0, anchor=NW, image =img)
 
 
-foreground_list = []
-#path = askopenfilename(filetypes=[("Image File",'.jpg')])
-#path = Path(path)
 window = Tk()
 window.title('nfis')
 
