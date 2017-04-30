@@ -19,14 +19,20 @@ class input_item(Frame):
 
 resize_factor = 0
 
-#main_screen = Tk()
-def click_handler(event):
+def click_handler(event):# this is the handler of the mouse clicking
     print("Mouse position: (%s %s)" % (event.x, event.y))
     global origin_image_label
     origin_image_label.create_oval(event.x - 1, event.y - 1, event.x + 1, event.y + 1, width = 2, fill = 'red', outline = 'red')
     global sample_rate_input
-    #cc = int(sample_rate_input.get_text())
+    global penalty_input
+    sample_rate = float(sample_rate_input.get_text())#sampling rate
+    penalty = float(penalty_input.get_text())   #penalty set
+    #the default value is 4 for sample_rate, 0.02 for penalty.
 
+    #----------------put your code here------------------#
+
+
+    #----------------------------------------------------#
     return
 
 def update_result():
@@ -44,24 +50,15 @@ def open_file():
     img = ImageTk.PhotoImage(img.resize((int(img.width/resize_factor), int(img.height/resize_factor))))
     origin_image_label.configure(image = img)
 
-'''
-path = "example.jpg"
-img = ImageTk.PhotoImage(Image.open(path))
-image_win = Label(main_screen, image = img)
-image_win.bind('<Button>', click_handler)
-image_win.pack(side = "top", expand = "yes")
-panel = Frame(main_screen)
-panel.pack(side = "bottom")
-button = Button(panel, text="haha")
-button.pack()
-mainloop()
-'''
+
+
 foreground_list = []
 #path = askopenfilename(filetypes=[("Image File",'.jpg')])
 #path = Path(path)
 window = Tk()
 window.title('nfis')
-path = "example.jpg"
+path = "example.jpg"  # change this line to the name of input image
+path = "result.jpg"   # change this line to the name of output image
 img = Image.open(path)
 resize_factor = img.height / 300 if (img.height / 300) > (img.width / 400) else img.width / 400
 img = ImageTk.PhotoImage(img.resize((int(img.width/resize_factor), int(img.height/resize_factor))))
@@ -86,14 +83,12 @@ result_image_label.bind('<Button>', click_handler)
 origin_image_label.pack(side = "left")
 result_image_label.pack(side = "right")
 
-#start_button = Button(panel_part, text="open image...", command = open_file)
-#start_button.pack()
 sample_rate_input = input_item('sample rate', panel_part)
-sample_rate_input.insert('4')
+sample_rate_input.insert('4')   # change the default value for sample rate if you want
 sample_rate_input.pack(side = "left", padx=10)
 
 penalty_input = input_item('penalty', panel_part)
-penalty_input.insert('0.02')
+penalty_input.insert('0.02')    # change the default value for penalty if you want
 penalty_input.pack(side = "left", padx=10)
 
 start_button = Button(panel_part, text="start processing", command = update_result)
