@@ -88,7 +88,7 @@ class Graph:
                     self.excess[i] += data_flow
                 if(self.excess[start]==0):
                     return v_has_excess
-            elif(validpath>0 and (self.height[start]<=self.height[i])):
+            elif(validpath>0 and (self.height[start] <= self.height[i])):
                 height_diff = min(height_diff, self.height[i]-self.height[start]+1)
         # if no flow is pushed, and there exists a path but the hight is not enough
         # raise the height directly to that value plus one, else just raise one
@@ -115,12 +115,14 @@ class Graph:
                 background.append(i)
         return foreground,background
 
-def proc(path, path2, sample_rate):
+def proc(path, path2, sample_rate, penalty, clusters):
     start = time.time()
-    image_d, m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction(path, sample_rate)
+    image_d, m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction(path, sample_rate, clusters)
+    if clusters > 2:
+        return
     duration = time.time()-start
     print('Likelihood calculation done in: {0:.2f}s '.format(duration))
-    g=Graph(m, n, likelihood_a, likelihood_b, 0.1)
+    g=Graph(m, n, likelihood_a, likelihood_b, penalty)
     node_has_excess = []
     # push to a list
     start - time.time()
@@ -145,7 +147,7 @@ def proc(path, path2, sample_rate):
         labels[((i-1)//n)][(i-1)%n]=0
     # for i in background_list:
     #     labels[((i-1)//n)][(i-1)%n]=1
-    Kmeans_rgb_modified.segementation_nf(image_d, labels, path2)
+    Kmeans_rgb_modified.segementation(image_d, labels)
     duration = time.time()-start
     print('segmentation done in: {0:.2f}s'.format(duration))
 

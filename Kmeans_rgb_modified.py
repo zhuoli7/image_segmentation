@@ -109,9 +109,9 @@ def mainfunction(im, downsample_rate, nums=2):
     duration = time.time()-start
     # print('K-Means Cluster time is: {0:.2f}s'.format(duration))
     # mplot(centers, labels, temp)
-    if(nums==2):
+    if(nums>2):
         # start = time.time()
-        segementation(image, labels, nums)
+        segementation(image_d, labels, nums)
         # duration = time.time()-start
         # print('Segmentation time is: {0:.2f}s'.format(duration))
 
