@@ -16,10 +16,11 @@ import time
 import math
 from skimage.measure import block_reduce
 from sklearn.mixture import GaussianMixture
-def KM_cluster(image):
+
+def KM_cluster(image, nums=2):
     m, n, z = image.shape
     temp = image.reshape(m*n, z)
-    result = KMeans(n_clusters = 2, n_jobs=1)
+    result = KMeans(n_clusters=nums, n_jobs=1)
     result.fit(temp)
     center = result.cluster_centers_
     labels = result.labels_
@@ -48,18 +49,18 @@ def mplot(centers, labels, temp):
     ax1.set_zlabel('B')
     plt.show()
 
-def segementation(image, labels):
+def segementation(image, labels, nums=2):
     m, n, z = image.shape
-    one_side = np.zeros_like(image)
-    another_side = np.zeros_like(image)
-    for i in range(m):
-        for j in range(n):
-            if(labels[i][j] == 0):
-                one_side[i][j] = image[i][j]
-            else:
-                another_side[i][j] = image[i][j]
-    imsave('one.jpg', one_side)
-    imsave('two.jpg', another_side)
+    # result = np.zeros_like(image)
+    # another_side = np.zeros_like(image)
+    for k in range(nums):
+        result = np.zeros_like(image)
+        for i in range(m):
+            for j in range(n):
+                if(labels[i][j] == k):
+                    result[i][j] = image[i][j]
+        imsave('p{0}.jpg'.format(k+1), result)
+
 
 def segementation_nf(image, labels, iamge_name):
     m, n, z = image.shape
@@ -147,5 +148,9 @@ def mainfunction(im, downsample_rate):
     return image_d, m, n, likelihood_a, likelihood_b
 
 if __name__=='__main__':
-    image_d, m, n, likelihood_a, likelihood_b = mainfunction()
+    im = 'cow.jpg'
+    image = imread(im)
+    # image_d = downsample(image, 4)
+    centers, labels, temp, m, n = KM_cluster(image, 4)
+    segementation(image, labels, 4)
     
