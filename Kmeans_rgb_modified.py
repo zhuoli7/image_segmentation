@@ -51,20 +51,19 @@ def mplot(centers, labels, temp):
 
 def segementation(image, labels, nums=2):
     m, n, z = image.shape
-    # result = np.zeros_like(image)
-    # another_side = np.zeros_like(image)
+    result = np.zeros((m*nums, n, z), dtype=np.uint8)
     for k in range(nums):
-        result = np.zeros_like(image)
         for i in range(m):
             for j in range(n):
                 if(labels[i][j] == k):
-                    result[i][j] = image[i][j]
-        imsave('p{0}.jpg'.format(k+1), result)
+                    result[i+k*m][j] = image[i][j]
+    imsave('result.jpg', result)
 
 
 def segementation_nf(image, labels, iamge_name):
     m, n, z = image.shape
     one_side = np.zeros_like(image)
+    print(one_side.dtype)
     another_side = np.zeros_like(image)
     for i in range(m):
         for j in range(n):
@@ -152,6 +151,6 @@ def mainfunction(im, downsample_rate, nums=2):
 #     im = 'cow.jpg'
 #     image = imread(im)
 #     # image_d = downsample(image, 4)
-#     centers, labels, temp, m, n = KM_cluster(image, 2)
-#     segementation(image, labels, 2)
+#     centers, labels, temp, m, n = KM_cluster(image, 4)
+#     segementation(image, labels,4)
     
