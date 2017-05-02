@@ -19,7 +19,7 @@ from sklearn.mixture import GaussianMixture
 def KM_cluster(image):
     m, n, z = image.shape
     temp = image.reshape(m*n, z)
-    result = KMeans(n_clusters = 2, n_jobs=-1)
+    result = KMeans(n_clusters = 2, n_jobs=1)
     result.fit(temp)
     center = result.cluster_centers_
     labels = result.labels_
@@ -61,7 +61,7 @@ def segementation(image, labels):
     imsave('one.jpg', one_side)
     imsave('two.jpg', another_side)
 
-def segementation_nf(image, labels):
+def segementation_nf(image, labels, iamge_name):
     m, n, z = image.shape
     one_side = np.zeros_like(image)
     another_side = np.zeros_like(image)
@@ -71,8 +71,8 @@ def segementation_nf(image, labels):
                 one_side[i][j] = image[i][j]
             else:
                 another_side[i][j] = image[i][j]
-    imsave('one_nf.jpg', one_side)
-    imsave('two_nf.jpg', another_side)
+    imsave('one' + iamge_name, one_side)
+    imsave('tow' + iamge_name, another_side)
 
 def downsample(image,down_rate):
     image_d = block_reduce(image, block_size=(down_rate, down_rate, 1), func=np.max)
@@ -99,13 +99,12 @@ def GMM(image):
     means = result_GMM.means_
     covariances = result_GMM.covariances_
 
-def mainfunction():
+def mainfunction(im, downsample_rate):
     start = time.time()
     fig = plt.figure()
     ax1 = fig.add_subplot(111, projection='3d')
-    im = 'cow.jpg'
     image = imread(im)
-    image_d = downsample(image,4)	
+    image_d = downsample(image, downsample_rate)	
     centers, labels, temp, m, n = KM_cluster(image_d)
     duration = time.time()-start
     # print('K-Means Cluster time is: {0:.2f}s'.format(duration))
@@ -131,6 +130,7 @@ def mainfunction():
     # segementation(image_d, label_lik.reshape(m,n))
     # print(type(image_d))
     # print(len(image_d))
+    '''
     f1=open('qita.txt','w')
     np.savetxt('image_d_r.txt', image_d[:,:,0],fmt='%d')
     np.savetxt('image_d_g.txt', image_d[:,:,1],fmt='%d')
@@ -143,6 +143,7 @@ def mainfunction():
     for item in likelihood_b:
         f1.write('%s ' %item)
     f1.close()
+    '''
     return image_d, m, n, likelihood_a, likelihood_b
 
 if __name__=='__main__':

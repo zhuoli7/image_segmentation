@@ -115,10 +115,9 @@ class Graph:
                 background.append(i)
         return foreground,background
 
-
-if __name__=='__main__':
+def proc(path, path2, sample_rate):
     start = time.time()
-    image_d, m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction()
+    image_d, m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction(path, sample_rate)
     duration = time.time()-start
     print('Likelihood calculation done in: {0:.2f}s '.format(duration))
     g=Graph(m, n, likelihood_a, likelihood_b, 0.1)
@@ -146,7 +145,9 @@ if __name__=='__main__':
         labels[((i-1)//n)][(i-1)%n]=0
     # for i in background_list:
     #     labels[((i-1)//n)][(i-1)%n]=1
-    Kmeans_rgb_modified.segementation_nf(image_d, labels)
+    Kmeans_rgb_modified.segementation_nf(image_d, labels, path2)
     duration = time.time()-start
     print('segmentation done in: {0:.2f}s'.format(duration))
-    
+
+if __name__=='__main__':
+    proc('cow.jpg', 'cow.jpg')
