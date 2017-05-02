@@ -100,20 +100,21 @@ def GMM(image):
     means = result_GMM.means_
     covariances = result_GMM.covariances_
 
-def mainfunction(im, downsample_rate):
+def mainfunction(im, downsample_rate, nums=2):
     start = time.time()
     fig = plt.figure()
     ax1 = fig.add_subplot(111, projection='3d')
     image = imread(im)
     image_d = downsample(image, downsample_rate)	
-    centers, labels, temp, m, n = KM_cluster(image_d)
+    centers, labels, temp, m, n = KM_cluster(image_d, nums)
     duration = time.time()-start
     # print('K-Means Cluster time is: {0:.2f}s'.format(duration))
     # mplot(centers, labels, temp)
-    start = time.time()
-    # segementation(image_d, labels)
-    duration = time.time()-start
-    # print('Segmentation time is: {0:.2f}s'.format(duration))
+    if(nums==2):
+        # start = time.time()
+        segementation(image, labels, nums)
+        # duration = time.time()-start
+        # print('Segmentation time is: {0:.2f}s'.format(duration))
 
     #########
     dist_a, dist_b = Euclidian_distance(temp, centers)
@@ -147,10 +148,10 @@ def mainfunction(im, downsample_rate):
     '''
     return image_d, m, n, likelihood_a, likelihood_b
 
-if __name__=='__main__':
-    im = 'cow.jpg'
-    image = imread(im)
-    # image_d = downsample(image, 4)
-    centers, labels, temp, m, n = KM_cluster(image, 4)
-    segementation(image, labels, 4)
+# if __name__=='__main__':
+#     im = 'cow.jpg'
+#     image = imread(im)
+#     # image_d = downsample(image, 4)
+#     centers, labels, temp, m, n = KM_cluster(image, 2)
+#     segementation(image, labels, 2)
     
