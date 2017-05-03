@@ -8,6 +8,7 @@ import numpy as np
 import Kmeans_rgb_modified
 import bisect
 import time
+from math import exp
 
 class Graph:
     def __init__(self,m,n,la,lb,penalty):
@@ -32,48 +33,80 @@ class Graph:
             self.adj[-1].append(j)
         
         self.excess.append(0)
-        for i in range(self.size):
-            p = penalty
-            j = i + 1
-            xc = j // self.width
-            yc = j % self.width
-            self.adj.setdefault(j, [])
-            self.adj[j].append(-1)
-            self.adj[j].append(0)
-            self.flow.setdefault(j, {})
-            self.flow[j].setdefault(0, -la[i])
-            self.flow[j].setdefault(-1, 0)
-            self.capacity.setdefault(j, {})
-            self.capacity[j].setdefault(0, 0)
-            self.capacity[j].setdefault(-1, lb[i])
-            if j > self.width:
-                top = (xc - 1) * self.width + yc
-                if p == -1:
+        if penalty == -1:
+            for i in range(self.size):
+                p = penalty
+                j = i + 1
+                xc = j // self.width
+                yc = j % self.width
+                self.adj.setdefault(j, [])
+                self.adj[j].append(-1)
+                self.adj[j].append(0)
+                self.flow.setdefault(j, {})
+                self.flow[j].setdefault(0, -la[i])
+                self.flow[j].setdefault(-1, 0)
+                self.capacity.setdefault(j, {})
+                self.capacity[j].setdefault(0, 0)
+                self.capacity[j].setdefault(-1, lb[i])
+                if j > self.width:
+                    top = (xc - 1) * self.width + yc
                     p = 0.1 * exp(-((la[i] - la[top - 1]) ** 2 + (lb[i] - lb[top - 1]) ** 2) / 2)
-                self.capacity[j].setdefault(top, p)
-                self.flow[j].setdefault(top, 0)
-                self.adj[j].append(top)
-            if yc != 1:
-                left = xc * self.width + yc - 1
-                if p == -1:
+                    self.capacity[j].setdefault(top, p)
+                    self.flow[j].setdefault(top, 0)
+                    self.adj[j].append(top)
+                if yc != 1:
+                    left = xc * self.width + yc - 1
                     p = 0.1 * exp(-((la[i] - la[left - 1]) ** 2 + (lb[i] - lb[left - 1]) ** 2) / 2)
-                self.capacity[j].setdefault(left, p)
-                self.flow[j].setdefault(left, 0)
-                self.adj[j].append(left)
-            if yc != 0:
-                right = xc * self.width + yc + 1
-                if p == -1:
+                    self.capacity[j].setdefault(left, p)
+                    self.flow[j].setdefault(left, 0)
+                    self.adj[j].append(left)
+                if yc != 0:
+                    right = xc * self.width + yc + 1
                     p = 0.1 * exp(-((la[i] - la[right - 1]) ** 2 + (lb[i] - lb[right - 1]) ** 2) / 2)
-                self.capacity[j].setdefault(right, p)
-                self.flow[j].setdefault(right, 0)
-                self.adj[j].append(right)
-            if j <= self.size - self.width:
-                bot = (xc + 1) * self.width + yc
-                if p == -1:
+                    self.capacity[j].setdefault(right, p)
+                    self.flow[j].setdefault(right, 0)
+                    self.adj[j].append(right)
+                if j <= self.size - self.width:
+                    bot = (xc + 1) * self.width + yc
                     p = 0.1 * exp(-((la[i] - la[bot - 1]) ** 2 + (lb[i] - lb[bot - 1]) ** 2) / 2)
-                self.capacity[j].setdefault(bot, p)
-                self.flow[j].setdefault(bot, 0)
-                self.adj[j].append(bot)
+                    self.capacity[j].setdefault(bot, p)
+                    self.flow[j].setdefault(bot, 0)
+                    self.adj[j].append(bot)
+        else:
+            for i in range(self.size):
+                p = penalty
+                j = i + 1
+                xc = j // self.width
+                yc = j % self.width
+                self.adj.setdefault(j, [])
+                self.adj[j].append(-1)
+                self.adj[j].append(0)
+                self.flow.setdefault(j, {})
+                self.flow[j].setdefault(0, -la[i])
+                self.flow[j].setdefault(-1, 0)
+                self.capacity.setdefault(j, {})
+                self.capacity[j].setdefault(0, 0)
+                self.capacity[j].setdefault(-1, lb[i])
+                if j > self.width:
+                    top = (xc - 1) * self.width + yc
+                    self.capacity[j].setdefault(top, p)
+                    self.flow[j].setdefault(top, 0)
+                    self.adj[j].append(top)
+                if yc != 1:
+                    left = xc * self.width + yc - 1
+                    self.capacity[j].setdefault(left, p)
+                    self.flow[j].setdefault(left, 0)
+                    self.adj[j].append(left)
+                if yc != 0:
+                    right = xc * self.width + yc + 1
+                    self.capacity[j].setdefault(right, p)
+                    self.flow[j].setdefault(right, 0)
+                    self.adj[j].append(right)
+                if j <= self.size - self.width:
+                    bot = (xc + 1) * self.width + yc
+                    self.capacity[j].setdefault(bot, p)
+                    self.flow[j].setdefault(bot, 0)
+                    self.adj[j].append(bot)
     
     def push(self, start):
         if (self.height[start]>2*self.size-1 or self.excess[start]==0):
@@ -123,10 +156,10 @@ class Graph:
                 background.append(i)
         return foreground,background
 
-def proc(path, path2, sample_rate, penalty, clusters):
+def proc(path, path2, sample_rate, penalty, clusters, drop_off):
     start = time.time()
     image_d, m, n, likelihood_a, likelihood_b = Kmeans_rgb_modified.mainfunction(path, sample_rate, clusters)
-    if clusters > 2:
+    if drop_off == 1 or clusters > 2:
         return
     duration = time.time()-start
     print('Likelihood calculation done in: {0:.2f}s '.format(duration))
@@ -160,4 +193,4 @@ def proc(path, path2, sample_rate, penalty, clusters):
     print('segmentation done in: {0:.2f}s'.format(duration))
 
 if __name__=='__main__':
-    proc('cow.jpg', 'cow.jpg')
+    proc('cow.jpg', 'cow.jpg', 1, 0.01, 2)

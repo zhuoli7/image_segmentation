@@ -1,3 +1,4 @@
+from tkinter import ttk
 from tkinter import *
 from PIL import ImageTk, Image
 from tkinter.filedialog import askopenfilename
@@ -32,22 +33,21 @@ def click_handler(event):# this is the handler of the mouse clicking
 def update_result():# this is the handler of the start processing button
     global sample_rate_input
     global penalty_input
-    global img2
     global clicked_list
-    global path #the name of the input image
-    global sample_rate
-    global penalty
     global clusters_input
-
+    global drop_off
+    global img2
+    global img
+    global cur_pro
+    if img == None:
+        return
     sample_rate = int(sample_rate_input.get_text())#sampling rate
     penalty = float(penalty_input.get_text())   #penalty set
     clusters = int(clusters_input.get_text())
     #the default value is 4 for sample_rate, 0.02 for penalty.
-
-    
     #the name of the input image is stored in path, use it.
     #----------------put your code here------------------#
-    test_504.proc(path, path, sample_rate, penalty, clusters)
+    test_504.proc(path, path, sample_rate, penalty, clusters, drop_off.get())
     #----------------------------------------------------#
     img2 = Image.open('result.jpg')
     resize_factor = img2.height / 300 if (img2.height / 300) > (img2.width / (window_width / 2)) else img2.width / (window_width / 2)
@@ -67,18 +67,24 @@ def open_file():
     img = ImageTk.PhotoImage(img.resize((int(img.width/resize_factor), int(img.height/resize_factor))))
     origin_image_label.create_image(0, 0, anchor=NW, image = img)
 
-flag = 1
+def quit_win():
+    window.destroy()
+
 window = Tk()
 window.title('nfis')
 
+drop_off = IntVar()
+cur_pro = DoubleVar()
 image_part = Frame(window)
 panel_part = LabelFrame(window, text="panel", width = window_width, height = 70)
 panel_part.pack_propagate(0)
 image_part.pack(side = "top")
-panel_part.pack(side = "bottom")
+panel_part.pack(side = "top")
 
 origin_image_frame = LabelFrame(image_part, text="origin image", width = window_width / 2, height = 300)
 result_image_frame = LabelFrame(image_part, text="result image", width = window_width / 2, height = 300)
+progressbar = ttk.Progressbar(image_part, orient=VERTICAL, mode = 'indeterminate', length=280, variable = cur_pro)
+
 origin_image_frame.pack(expand = "yes", side = "left")
 result_image_frame.pack(expand = "yes", side = "right")
 origin_image_frame.pack_propagate(0)
@@ -89,6 +95,7 @@ origin_image_label.pack_propagate(0)
 origin_image_label.bind('<Button>', click_handler)
 result_image_label.bind('<Button>', click_handler)
 origin_image_label.pack(side = "left")
+progressbar.pack(side="left")
 result_image_label.pack(side = "top")
 
 input_image_name = input_item('input', int(window_width / 70), panel_part)
@@ -107,10 +114,16 @@ clusters_input.insert('2')   # change the default value for sample rate if you w
 clusters_input.pack(side = "left", padx=10)
 
 penalty_input = input_item('penalty', int(window_width / 70), panel_part)
-penalty_input.insert('0.02')    # change the default value for penalty if you want
+penalty_input.insert('0.07')    # change the default value for penalty if you want
 penalty_input.pack(side = "left", padx=10)
 
 start_button = Button(panel_part, text="start processing", command = update_result)
-start_button.pack(side = "right", padx=10)
+start_button.pack(side = "right", padx=5)
+
+quit_button = Button(panel_part, text="quit", command = quit_win)
+quit_button.pack(side = "right", padx=5)
+
+drop_off_button = Checkbutton(panel_part, text = "drop off", variable = drop_off, onvalue = 1, offvalue = 0)
+drop_off_button.pack(side = "right", padx=5)
 
 window.mainloop()
