@@ -19,7 +19,6 @@ class Graph:
         self.height = [self.size + 2, 0]
         self.excess = [0]
         self.adj = {0:[], -1:[]}
-        
         # initialization
         for i in range(self.size):
             j = i + 1
@@ -31,9 +30,10 @@ class Graph:
             self.capacity[-1].setdefault(j, 0)
             self.adj[0].append(j)
             self.adj[-1].append(j)
-            
+        
         self.excess.append(0)
         for i in range(self.size):
+            p = penalty
             j = i + 1
             xc = j // self.width
             yc = j % self.width
@@ -48,22 +48,30 @@ class Graph:
             self.capacity[j].setdefault(-1, lb[i])
             if j > self.width:
                 top = (xc - 1) * self.width + yc
-                self.capacity[j].setdefault(top, penalty)
+                if p == -1:
+                    p = 0.1 * exp(-((la[i] - la[top - 1]) ** 2 + (lb[i] - lb[top - 1]) ** 2) / 2)
+                self.capacity[j].setdefault(top, p)
                 self.flow[j].setdefault(top, 0)
                 self.adj[j].append(top)
             if yc != 1:
                 left = xc * self.width + yc - 1
-                self.capacity[j].setdefault(left, penalty)
+                if p == -1:
+                    p = 0.1 * exp(-((la[i] - la[left - 1]) ** 2 + (lb[i] - lb[left - 1]) ** 2) / 2)
+                self.capacity[j].setdefault(left, p)
                 self.flow[j].setdefault(left, 0)
                 self.adj[j].append(left)
             if yc != 0:
                 right = xc * self.width + yc + 1
+                if p == -1:
+                    p = 0.1 * exp(-((la[i] - la[right - 1]) ** 2 + (lb[i] - lb[right - 1]) ** 2) / 2)
                 self.capacity[j].setdefault(right, penalty)
                 self.flow[j].setdefault(right, 0)
                 self.adj[j].append(right)
             if j <= self.size - self.width:
                 bot = (xc + 1) * self.width + yc
-                self.capacity[j].setdefault(bot, penalty)
+                if p == -1:
+                    p = 0.1 * exp(-((la[i] - la[bot - 1]) ** 2 + (lb[i] - lb[bot - 1]) ** 2) / 2)
+                self.capacity[j].setdefault(bot, p)
                 self.flow[j].setdefault(bot, 0)
                 self.adj[j].append(bot)
     
