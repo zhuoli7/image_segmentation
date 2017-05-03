@@ -64,7 +64,7 @@ class Graph:
                 right = xc * self.width + yc + 1
                 if p == -1:
                     p = 0.1 * exp(-((la[i] - la[right - 1]) ** 2 + (lb[i] - lb[right - 1]) ** 2) / 2)
-                self.capacity[j].setdefault(right, penalty)
+                self.capacity[j].setdefault(right, p)
                 self.flow[j].setdefault(right, 0)
                 self.adj[j].append(right)
             if j <= self.size - self.width:
