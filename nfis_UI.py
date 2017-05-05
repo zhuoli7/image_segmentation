@@ -1,7 +1,8 @@
+import matplotlib
+matplotlib.use('TkAgg')
 from tkinter import ttk
 from tkinter import *
 from PIL import ImageTk, Image
-from tkinter.filedialog import askopenfilename
 import test_504
 
 clicked_list = []
@@ -98,22 +99,22 @@ origin_image_label.pack(side = "left")
 #progressbar.pack(side="left")
 result_image_label.pack(side = "top")
 
-input_image_name = input_item('input', int(window_width / 70), panel_part)
+input_image_name = input_item('input', int(window_width / 150), panel_part)
 input_image_name.insert('cow.jpg')
 input_image_name.pack(side = "left")
 
 open_button = Button(panel_part, text="open", command = open_file)
 open_button.pack(side = "left", padx=10)
 
-sample_rate_input = input_item('sample rate', int(window_width / 70), panel_part)
+sample_rate_input = input_item('sample rate', int(window_width / 150), panel_part)
 sample_rate_input.insert('4')   # change the default value for sample rate if you want
 sample_rate_input.pack(side = "left", padx=10)
 
-clusters_input = input_item('clusters', int(window_width / 70), panel_part)
+clusters_input = input_item('clusters', int(window_width / 150), panel_part)
 clusters_input.insert('2')   # change the default value for sample rate if you want
 clusters_input.pack(side = "left", padx=10)
 
-penalty_input = input_item('penalty', int(window_width / 70), panel_part)
+penalty_input = input_item('penalty', int(window_width / 150), panel_part)
 penalty_input.insert('0.07')    # change the default value for penalty if you want
 penalty_input.pack(side = "left", padx=10)
 
