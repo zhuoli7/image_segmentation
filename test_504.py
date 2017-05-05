@@ -193,4 +193,4 @@ def proc(path, path2, sample_rate, penalty, clusters, drop_off):
     print('segmentation done in: {0:.2f}s'.format(duration))
 
 if __name__=='__main__':
-    proc('cow.jpg', 'cow.jpg', 1, 0.01, 2)
+    proc('cow.jpg', 'cow.jpg', 1, 0.01, 2, 0)
