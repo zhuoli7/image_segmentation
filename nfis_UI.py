@@ -114,7 +114,7 @@ clusters_input.insert('2')   # change the default value for sample rate if you w
 clusters_input.pack(side = "left", padx=10)
 
 penalty_input = input_item('penalty', int(window_width / 70), panel_part)
-penalty_input.insert('0.07')    # change the default value for penalty if you want
+penalty_input.insert('0.02')    # change the default value for penalty if you want
 penalty_input.pack(side = "left", padx=10)
 
 start_button = Button(panel_part, text="start processing", command = update_result)

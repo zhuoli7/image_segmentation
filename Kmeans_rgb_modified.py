@@ -72,7 +72,7 @@ def segementation_nf(image, labels, iamge_name):
             else:
                 another_side[i][j] = image[i][j]
     imsave('one' + iamge_name, one_side)
-    imsave('tow' + iamge_name, another_side)
+    imsave('two' + iamge_name, another_side)
 
 def downsample(image,down_rate):
     image_d = block_reduce(image, block_size=(down_rate, down_rate, 1), func=np.max)
