@@ -1,5 +1,22 @@
-# nfis
-a secret repo.
-传文件的时候记得到群里报备一下，否则会很乱，谢谢大家！
-# graph.py使用方法
-把graph.py和Kmeans_rgb_modified.py放到同目录下，并配合一张图片，需要修改Kmeans_rgb_modified.py中87行中的图片名。运行的时候直接跑graph.py就可以。如果提示sklearn无法调用，需要升级sklearn到0.18版本
+#  Image Segmentation
+
+## Project Description
+
+A easy to use app for image foreground/background segmentation
+
+## Required Environment
+
+* You should confirm your Python version should be 3.5 or higher
+* Make sure you have Numpy and Scipy installed on your Python. If not, try the following command to do that:
+    python -m pip install --upgrade pip
+pip install --user numpy scipy matplotlib ipython jupyter pandas sympy nose
+* For using k-means, you should have newest version of sklearn installed by the following command:
+    pip install -U scikit-learn
+* The UI is implemented via tkinter module in Python, usually it's a standard integral part of Python 3.x.
+
+## User Guide
+
+* Use the app by running nfis_UI.py.
+
+
+
